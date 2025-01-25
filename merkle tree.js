@@ -1,7 +1,6 @@
-const { MerkleTree } = require("merkletreejs");
-const SHA256 = require("crypto-js/sha256");
+const { MerkleTree } = require("merkletreejs"); // Import merkle.js library
+const SHA256 = require("crypto-js/sha256"); // Import sha256(hashing function from crypto.js library)
 
-// Sample addresses
 const addresses = [
     "address1",
     "address2",
@@ -10,20 +9,14 @@ const addresses = [
     "address5"
 ];
 
-// Hash the addresses using SHA256
-const hashedAddresses = addresses.map(addr => SHA256(addr).toString());
+const hashAddresses = addresses.map(addr => SHA256(addr).toString()); // create an array of the addresses
+const merkleTree = new MerkleTree(hashAddresses, SHA256); // To create Merkle Tree use the merkletree library and pass the array of hashed addresses and hash function
 
-// Create the Merkle Tree
-const merkleTree = new MerkleTree(hashedAddresses, SHA256);
-
-// Get the Merkle Root
-const merkleRoot = merkleTree.getRoot().toString("hex");
+const merkleRoot = merkleTree.getRoot().toString("hex"); // get the root of the tree
 console.log("Merkle Root:", merkleRoot);
 
-// Generate a proof for "address3"
-const leaf = SHA256("address3").toString();
+const leaf = SHA256("address3").toString(); // Generate a proof for "any random address"
 const proof = merkleTree.getProof(leaf);
 
-// Verify the proof
-const isValid = merkleTree.verify(proof, leaf, merkleTree.getRoot());
-console.log("Verification Result for 'address3':", isValid);
+const isValid = merkleTree.verify(proof, leaf, merkleTree.getRoot()); // Verify the proof
+console.log("Verification Result for 'address3':", isValid); // logs the results and shows if the address is from the tree. Returns yes if valid
